@@ -37,7 +37,7 @@ def test_add_and_browse_calculation_positive(auth_user: Page, fastapi_server: st
     page.fill("#calcInputs", "5, 10, 15")
     page.click("#calculationForm button[type='submit']")
     
-    # Verify Success Message (Dashboard addition uses the static alert banner)
+    # Verify Success Message
     expect(page.locator("#successAlert")).to_be_visible()
     expect(page.locator("#successMessage")).to_contain_text("Calculation complete: 30")
     
@@ -101,5 +101,6 @@ def test_delete_calculation(auth_user: Page, fastapi_server: str):
     # Click Delete
     page.click("button:has-text('Delete')")
     
-    # Verify deletion success - The Dashboard delete function uses window.showToast
-    expect(page.locator("#toastContainer")).to_contain_text("deleted successfully")
+    # Verify deletion success - The Dashboard uses the static successAlert, NOT the toast!
+    expect(page.locator("#successAlert")).to_be_visible()
+    expect(page.locator("#successMessage")).to_contain_text("deleted successfully")

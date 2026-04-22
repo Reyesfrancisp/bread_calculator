@@ -16,13 +16,15 @@ def auth_user(page: Page, fastapi_server: str):
     page.fill("#password", "SecurePass123!")
     page.fill("#confirm_password", "SecurePass123!")
     page.click("button[type='submit']")
-    page.wait_for_url("**/login")
+    
+    page.wait_for_url("**/login**")
 
     # Login
     page.fill("#username", username)
     page.fill("#password", "SecurePass123!")
     page.click("button[type='submit']")
-    page.wait_for_url("**/dashboard")
+    
+    page.wait_for_url("**/dashboard**")
     
     return page
 
@@ -35,7 +37,7 @@ def test_add_and_browse_calculation_positive(auth_user: Page, fastapi_server: st
     page.fill("#calcInputs", "5, 10, 15")
     page.click("#calculationForm button[type='submit']")
     
-    # Verify Success Message
+    # Verify Success Message (Dashboard addition uses the static alert banner)
     expect(page.locator("#successAlert")).to_be_visible()
     expect(page.locator("#successMessage")).to_contain_text("Calculation complete: 30")
     
@@ -76,8 +78,8 @@ def test_read_and_edit_calculation(auth_user: Page, fastapi_server: str):
     page.fill("#calcInputs", "4, 5")
     page.click("button:has-text('Save Changes')")
 
-    # Verify Success
-    expect(page.locator("#successAlert")).to_be_visible()
+    # Verify Success - The Edit page uses window.showToast which renders in #toastContainer
+    expect(page.locator("#toastContainer")).to_contain_text("successfully")
     
     # Go back to dashboard and verify the table updated
     page.goto(f"{fastapi_server}dashboard")
@@ -94,11 +96,10 @@ def test_delete_calculation(auth_user: Page, fastapi_server: str):
     expect(page.locator("#calculationsTable")).to_contain_text("6")
 
     # Handle the browser confirm dialog automatically by accepting it
-    page.on("dialog", lambda dialog: dialog.accept())
+    page.once("dialog", lambda dialog: dialog.accept())
 
     # Click Delete
     page.click("button:has-text('Delete')")
     
-    # Verify deletion success
-    expect(page.locator("#successAlert")).to_be_visible()
-    expect(page.locator("#successMessage")).to_contain_text("deleted successfully")
+    # Verify deletion success - The Dashboard delete function uses window.showToast
+    expect(page.locator("#toastContainer")).to_contain_text("deleted successfully")

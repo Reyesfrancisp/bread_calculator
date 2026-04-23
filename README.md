@@ -1,264 +1,81 @@
-# 📦 Project Setup
+# FastAPI BREAD Calculator
+
+A robust, full-stack calculator application featuring user authentication and complete BREAD (Browse, Read, Edit, Add, Delete) operations. Built with FastAPI and dynamically rendered Jinja2 templates, this project utilizes a fully automated DevSecOps CI/CD pipeline with Pytest, Playwright UI testing, and Trivy container security scanning.
+
+## 🔗 Live Docker Hub Repository
+**Docker Image:** [reyesfrancisp/bread_calculator](https://hub.docker.com/r/reyesfrancisp/bread_calculator)
 
 ---
 
-# 🧩 1. Install Homebrew (Mac Only)
-
-> Skip this step if you're on Windows.
-
-Homebrew is a package manager for macOS.  
-You’ll use it to easily install Git, Python, Docker, etc.
-
-**Install Homebrew:**
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-**Verify Homebrew:**
-
-```bash
-brew --version
-```
-
-If you see a version number, you're good to go.
+## 🛠️ Tech Stack
+* **Backend:** FastAPI, Python 3.10
+* **Database:** PostgreSQL (via SQLAlchemy ORM)
+* **Frontend:** HTML, TailwindCSS, Vanilla JS, Jinja2 Templates
+* **Security:** JWT Authentication, bcrypt password hashing
+* **Testing:** Pytest (Unit/Integration), Playwright (E2E UI)
+* **DevOps:** Docker, Docker Compose, GitHub Actions, Trivy
 
 ---
 
-# 🧩 2. Install and Configure Git
+## 🐳 How to Run the Application Locally
 
-## Install Git
+This application is fully containerized. You do not need to install Python or PostgreSQL locally, only Docker and Git.
 
-- **MacOS (using Homebrew)**
-
+**1. Clone the repository:**
 ```bash
-brew install git
+git clone [https://github.com/Reyesfrancisp/bread_calculator.git](https://github.com/Reyesfrancisp/bread_calculator.git)
+cd bread_calculator
 ```
 
-- **Windows**
-
-Download and install [Git for Windows](https://git-scm.com/download/win).  
-Accept the default options during installation.
-
-**Verify Git:**
-
+**2. Build and start the containers:**
 ```bash
-git --version
+docker-compose up -d --build
+```
+
+**3. Access the Application:**
+* **Frontend UI:** Open your browser and navigate to [http://localhost:8000](http://localhost:8000)
+* **Interactive API Docs (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
+* **API Health Check:** [http://localhost:8000/health](http://localhost:8000/health)
+
+**4. Stop the application:**
+```bash
+docker-compose down
 ```
 
 ---
 
-## Configure Git Globals
+## 🧪 How to Execute Tests Locally
 
-Set your name and email so Git tracks your commits properly:
+The test suite (including the Playwright End-to-End UI tests) must be executed *inside* the running Docker container, as it requires access to the internal database network.
 
+**1. Ensure your containers are running:**
 ```bash
-git config --global user.name "Your Name"
-git config --global user.email "your_email@example.com"
+docker-compose up -d
 ```
 
-Confirm the settings:
-
+**2. Run the entire test suite (Unit, Integration, and E2E):**
 ```bash
-git config --list
+docker-compose exec web pytest -v
 ```
 
----
-
-## Generate SSH Keys and Connect to GitHub
-
-> Only do this once per machine.
-
-1. Generate a new SSH key:
-
+**3. Run ONLY the Playwright UI Tests (BREAD Operations):**
 ```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
+docker-compose exec web pytest tests/e2e/test_bread_ui.py -v
 ```
 
-(Press Enter at all prompts.)
-
-2. Start the SSH agent:
-
+**4. View Test Coverage:**
 ```bash
-eval "$(ssh-agent -s)"
-```
-
-3. Add the SSH private key to the agent:
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-4. Copy your SSH public key:
-
-- **Mac/Linux:**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
-
-- **Windows (Git Bash):**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-5. Add the key to your GitHub account:
-   - Go to [GitHub SSH Settings](https://github.com/settings/keys)
-   - Click **New SSH Key**, paste the key, save.
-
-6. Test the connection:
-
-```bash
-ssh -T git@github.com
-```
-
-You should see a success message.
-
----
-
-# 🧩 3. Clone the Repository
-
-Now you can safely clone the course project:
-
-```bash
-git clone <repository-url>
-cd <repository-directory>
+docker-compose exec web pytest --cov=app --cov-report=term-missing
 ```
 
 ---
 
-# 🛠️ 4. Install Python 3.10+
+## 🔐 Security & CI/CD Pipeline
 
-## Install Python
-
-- **MacOS (Homebrew)**
-
-```bash
-brew install python
-```
-
-- **Windows**
-
-Download and install [Python for Windows](https://www.python.org/downloads/).  
-✅ Make sure you **check the box** `Add Python to PATH` during setup.
-
-**Verify Python:**
-
-```bash
-python3 --version
-```
-or
-```bash
-python --version
-```
-
----
-
-## Create and Activate a Virtual Environment
-
-(Optional but recommended)
-
-```bash
-python3 -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate.bat  # Windows
-```
-
-### Install Required Packages
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-# 🐳 5. (Optional) Docker Setup
-
-> Skip if Docker isn't used in this module.
-
-## Install Docker
-
-- [Install Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
-- [Install Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
-
-## Build Docker Image
-
-```bash
-docker build -t <image-name> .
-```
-
-## Run Docker Container
-
-```bash
-docker run -it --rm <image-name>
-```
-
----
-
-# 🚀 6. Running the Project
-
-- **Without Docker**:
-
-```bash
-python main.py
-```
-
-(or update this if the main script is different.)
-
-- **With Docker**:
-
-```bash
-docker run -it --rm <image-name>
-```
-
----
-
-# 📝 7. Submission Instructions
-
-After finishing your work:
-
-```bash
-git add .
-git commit -m "Complete Module X"
-git push origin main
-```
-
-Then submit the GitHub repository link as instructed.
-
----
-
-# 🔥 Useful Commands Cheat Sheet
-
-| Action                         | Command                                          |
-| ------------------------------- | ------------------------------------------------ |
-| Install Homebrew (Mac)          | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
-| Install Git                     | `brew install git` or Git for Windows installer |
-| Configure Git Global Username  | `git config --global user.name "Your Name"`      |
-| Configure Git Global Email     | `git config --global user.email "you@example.com"` |
-| Clone Repository                | `git clone <repo-url>`                          |
-| Create Virtual Environment     | `python3 -m venv venv`                           |
-| Activate Virtual Environment   | `source venv/bin/activate` / `venv\Scripts\activate.bat` |
-| Install Python Packages        | `pip install -r requirements.txt`               |
-| Build Docker Image              | `docker build -t <image-name> .`                |
-| Run Docker Container            | `docker run -it --rm <image-name>`               |
-| Push Code to GitHub             | `git add . && git commit -m "message" && git push` |
-
----
-
-# 📋 Notes
-
-- Install **Homebrew** first on Mac.
-- Install and configure **Git** and **SSH** before cloning.
-- Use **Python 3.10+** and **virtual environments** for Python projects.
-- **Docker** is optional depending on the project.
-
----
-
-# 📎 Quick Links
-
-- [Homebrew](https://brew.sh/)
-- [Git Downloads](https://git-scm.com/downloads)
-- [Python Downloads](https://www.python.org/downloads/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [GitHub SSH Setup Guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+This repository features a fully automated GitHub Actions workflow (`CI/CD`) that triggers on pushes to the `main` branch. The pipeline:
+1. Provisions a temporary PostgreSQL database.
+2. Installs dependencies and Playwright Linux binaries.
+3. Executes the full Pytest suite.
+4. Builds the Docker Image.
+5. Scans the image for vulnerabilities using **AquaSecurity Trivy**. (Note: Unpatchable transitive dependency conflicts, such as those related to `pyasn1`, are explicitly managed via a `.trivyignore` file).
+6. Automatically pushes the verified, passing image to Docker Hub.

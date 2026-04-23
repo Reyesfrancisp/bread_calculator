@@ -3,7 +3,7 @@
 A robust, full-stack calculator application featuring user authentication and complete BREAD (Browse, Read, Edit, Add, Delete) operations. Built with FastAPI and dynamically rendered Jinja2 templates, this project utilizes a fully automated DevSecOps CI/CD pipeline with Pytest, Playwright UI testing, and Trivy container security scanning.
 
 ## 🔗 Live Docker Hub Repository
-**Docker Image:** [reyesfrancisp/bread_calculator](https://hub.docker.com/r/reyesfrancisp/bread_calculator)
+**Docker Image:** [reyesfrancisp/bread_calculator](https://hub.docker.com/repositories/reyesfrancisp)
 
 ---
 
